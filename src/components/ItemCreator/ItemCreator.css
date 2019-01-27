@@ -1,3 +1,7 @@
-.item-creator {
+.item-creator-form {
     margin-top: 10px;
+}
+
+.item-creator-form .form-control{
+    margin-right: 5px;
 }

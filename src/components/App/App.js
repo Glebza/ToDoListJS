@@ -13,11 +13,25 @@ export default class App extends Component {
     state = {tasks :
         [
             {label: "Drink coffee", important: true, done:false,id: 1},
-            {label: "Go to sleep", important: true, done:false, id: 2},
+            {label: "Drunk sleep", important: true, done:false, id: 2},
             {label: "Listen to the music", important: false, done:false, id: 3},
-        ]
-    };
+        ],
+        term:'',
 
+
+
+    };
+   // taskBackup = [...this.state.tasks];
+
+    // onInfoButtonClick = (fieldName) =>{
+    //     let tasks = this.state.tasks.filter((el) => {return el[fieldName]});
+    //     this.setState( {filteredTasks:tasks});
+    // };
+
+    onSearchChanged =(e)=> {
+
+        this.setState({term:e});
+    };
 
     deleteElement =(id) =>{
         this.setState(({tasks}) =>{
@@ -29,8 +43,8 @@ export default class App extends Component {
     };
 
     addElement = (text) => {
-
-        const newElement = {label:'Hello world',important:false,done:false,id:this.nextElement++};
+        console.log({text});
+        const newElement = {label:text,important:false,done:false,id:this.nextElement++};
         this.setState(({tasks}) => {
             const newTasks = [...tasks,newElement];
             return {tasks:newTasks};
@@ -41,6 +55,15 @@ export default class App extends Component {
       this.setState(({tasks}) =>{
           return {tasks:this.toggleProperty(tasks, id, 'important')};
       })  ;
+    };
+
+
+
+    toggleDone = (id) => {
+        this.setState(({tasks}) =>{
+
+                return {tasks:this.toggleProperty(tasks, id, 'done')};
+        })  ;
     };
 
     toggleProperty(array, id, field) {
@@ -54,32 +77,37 @@ export default class App extends Component {
         return newArray;
     }
 
-    toggleDone = (id) => {
-        this.setState(({tasks}) =>{
-
-                return {tasks:this.toggleProperty(tasks, id, 'done')};
-        })  ;
+    search = (term,items) =>{
+        if (term.length === 0){
+            return items;
+        }else{
+            return items.filter((el) => {return el.label.indexOf(term) > -1});
+        }
     };
 
     render() {
-        const doneCount =  this.state.tasks.filter((el) => el.done ).length;
-        const toDoCount = this.state.tasks.length - doneCount;
+
+        const {tasks,term} = this.state;
+        const visibleItems = this.search(term,tasks);
+        const doneCount =  tasks.filter((el) => el.done ).length;
+        const toDoCount = tasks.length - doneCount;
+
         return (
 
             <div className="todo-app">
                 <AppHeader toDo={toDoCount} done={doneCount}/>
                 <div className="top-panel d-flex">
-                    <SearchPanel/>
-                    <ItemStatusFilter/>
+                    <SearchPanel onSearchChange = {this.onSearchChanged}/>
+                    <ItemStatusFilter onInfoButtonClick = {this.onInfoButtonClick}/>
                 </div>
 
-                <ToDoList tasks={this.state.tasks}
+                <ToDoList tasks={visibleItems}
                           onDeleted={this.deleteElement}
                           onToggleImportant = {this.toggleImportant}
                           onToggleDone = {this.toggleDone}
 
                 />
-                <ItemCreator onCreated={()=>this.addElement("")}/>
+                <ItemCreator onCreated={this.addElement}/>
             </div>)
     }
 

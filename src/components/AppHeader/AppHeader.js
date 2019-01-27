@@ -7,4 +7,4 @@ const AppHeader = (props) => {
     </span>)
 };
 
-export  default AppHeader
+export  default AppHeader;
