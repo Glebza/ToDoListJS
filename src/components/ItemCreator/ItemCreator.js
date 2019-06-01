@@ -33,7 +33,7 @@ export default class ItemCreator extends React.Component{
                 />
             <button
                 type="button"
-                className="btn btn-outline-secondary item-creator-btn" >Add Item</button>
+                className="btn btn-outline-secondary item-creator-btn" onClick={this.onSubmit}>Add Item</button>
             </form>
         )
     }
